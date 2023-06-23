@@ -1,13 +1,5 @@
-import { z } from "zod";
 import { useState } from "react";
 import Markdown from "react-markdown";
-
-const chatResponseSchema = z.object({
-  type: z.string(),
-  data: z.object({
-    content: z.string(),
-  }),
-});
 
 export function Chat() {
   const [prompt, setPrompt] = useState("");
@@ -27,13 +19,16 @@ export function Chat() {
       },
     });
 
-    const data = await response.json();
-    const result = chatResponseSchema.safeParse(data);
+    const reader = response.body?.getReader();
+    if (!reader) return;
 
-    if (result.success) {
-      setMessages((messages) => [...messages, result.data.data.content]);
-    } else {
-      setMessages((messages) => [...messages, "Error"]);
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const text = new TextDecoder("utf-8").decode(value);
+      console.log(text);
+      setMessages((messages) => [...messages, text]);
     }
   };
 
@@ -61,9 +56,7 @@ export function Chat() {
         </div>
       </form>
       <section className="flex flex-1 flex-col gap-2">
-        {messages.map((message, index) => (
-          <Markdown key={index}>{message}</Markdown>
-        ))}
+        <Markdown>{messages.join(" ")}</Markdown>
       </section>
     </div>
   );
