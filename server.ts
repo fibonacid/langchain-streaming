@@ -7,7 +7,7 @@ import cors from "cors";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: "*" }));
 
 const chat = new ChatOpenAI({
   temperature: 0.9,
@@ -21,14 +21,9 @@ app.get("/chat", async (req, res) => {
 });
 
 app.get("*", (req, res) => {
-  res.send(`<h1>LangChain</h1>
-<form action="/chat" method="GET">
-  <input type="text" name="message" />
-  <input type="submit" value="Send" />
-</form>
-  `);
+  res.redirect("http://localhost:3000");
 });
 
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
+app.listen(3333, () => {
+  console.log("Server running on http://localhost:3333");
 });
