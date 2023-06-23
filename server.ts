@@ -9,24 +9,30 @@ dotenv.config();
 const app = express();
 app.use(cors({ origin: "*" }));
 
-const chat = new ChatOpenAI({
-  temperature: 0.9,
-  openAIApiKey: process.env.OPENAI_API_KEY,
-  streaming: true,
-  callbacks: [
-    {
-      handleLLMNewToken(token: string) {
-        console.log("New token:", token);
-      },
-    },
-  ],
-});
-
 app.get("/chat", async (req, res) => {
   const message = req.query.message;
   if (typeof message === "string" && message) {
-    const response = await chat.call([new HumanChatMessage(message)]);
-    res.json(response);
+    // To stream the response we need access to the Response object.
+    // For this reason we need to create a new ChatOpenAI instance
+    // for each request.
+    const chat = new ChatOpenAI({
+      temperature: 0.9,
+      openAIApiKey: process.env.OPENAI_API_KEY,
+      streaming: true,
+      callbacks: [
+        {
+          handleLLMNewToken(token: string) {
+            console.log("New token:", token);
+            res.write(token);
+          },
+        },
+      ],
+    });
+    // We need to await the call to ensure that the
+    // connection is closed after the whole response
+    // is sent.
+    await chat.call([new HumanChatMessage(message)]);
+    res.end();
   } else {
     res.json({ error: "No message provided" });
   }
