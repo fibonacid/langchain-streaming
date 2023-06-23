@@ -9,7 +9,7 @@ export function Chat() {
     e.preventDefault();
     setPrompt("");
 
-    const url = new URL("/chat", "http://localhost:3333");
+    const url = new URL("/chat", "http://localhost:5000");
     url.searchParams.append("message", prompt);
 
     const response = await fetch(url, {

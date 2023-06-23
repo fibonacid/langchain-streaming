@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 async function chat(message, callback) {
-  const url = new URL("http://localhost:3333/chat");
+  const url = new URL("http://localhost:5000/chat");
   url.searchParams.append("message", message);
 
   const response = await fetch(url);
