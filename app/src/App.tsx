@@ -1,3 +1,5 @@
+import { Chat } from "./Chat";
+
 function App() {
   return (
     <main className="m-8">
@@ -5,6 +7,7 @@ function App() {
       <p className="text-sm">
         This is a demo of the LangChain streaming feature.
       </p>
+      <Chat />
     </main>
   );
 }
