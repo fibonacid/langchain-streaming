@@ -8,5 +8,5 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["server.ts", "index.d.ts"]
+  "include": ["server.ts", "client.ts",  "index.d.ts"]
 }
