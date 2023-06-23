@@ -12,7 +12,7 @@ app.use(cors({ origin: "*" }));
 const chat = new ChatOpenAI({
   temperature: 0.9,
   openAIApiKey: process.env.OPENAI_API_KEY,
-  // streaming: true,
+  streaming: true,
   callbacks: [
     {
       handleLLMNewToken(token: string) {

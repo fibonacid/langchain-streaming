@@ -1,5 +1,6 @@
-import { useState } from "react";
 import { z } from "zod";
+import { useState } from "react";
+import Markdown from "react-markdown";
 
 const chatResponseSchema = z.object({
   type: z.string(),
@@ -59,11 +60,9 @@ export function Chat() {
           </button>
         </div>
       </form>
-      <section className="flex flex-col gap-2">
+      <section className="flex flex-1 flex-col gap-2">
         {messages.map((message, index) => (
-          <p key={index} className="text-base">
-            {message}
-          </p>
+          <Markdown key={index}>{message}</Markdown>
         ))}
       </section>
     </div>
